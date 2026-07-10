@@ -1,0 +1,29 @@
+{
+  "name": "x-post-risk-reviewer",
+  "version": "0.1.1",
+  "owner": "CruiseSL",
+  "updated_at": "2026-07-10",
+  "status": "experimental",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "context_budget_tier": "production",
+  "review_cadence": "per-release",
+  "repository": "https://github.com/CruiseSL/x-post-risk-reviewer",
+  "factory_components": [
+    "references",
+    "scripts",
+    "evals"
+  ],
+  "source_links": [
+    "https://help.x.com/en/rules-and-policies/x-rules",
+    "https://help.x.com/en/rules-and-policies/enforcement-options",
+    "https://help.x.com/en/rules-and-policies/violent-content",
+    "https://help.x.com/en/rules-and-policies/abusive-behavior",
+    "https://help.x.com/en/rules-and-policies/hateful-conduct-policy",
+    "https://help.x.com/en/rules-and-policies/personal-information",
+    "https://help.x.com/en/rules-and-policies/authenticity",
+    "https://developers.openai.com/api/docs/guides/moderation",
+    "https://github.com/unitaryai/detoxify",
+    "https://github.com/cardiffnlp/tweeteval"
+  ]
+}

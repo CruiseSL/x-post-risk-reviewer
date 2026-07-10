@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+/moderation-signals*.json
+/post-signals*.json
