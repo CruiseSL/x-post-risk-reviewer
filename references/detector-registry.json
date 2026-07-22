@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "registry_version": "0.2.0",
+  "reviewed_at": "2026-07-22",
+  "policy_sources": [
+    {
+      "id": "x-rules",
+      "type": "public_policy",
+      "name": "The X Rules",
+      "url": "https://help.x.com/en/rules-and-policies/x-rules",
+      "reviewed_at": "2026-07-22"
+    },
+    {
+      "id": "x-authenticity",
+      "type": "public_policy",
+      "name": "X Authenticity Policy",
+      "url": "https://help.x.com/en/rules-and-policies/authenticity",
+      "page_version": "April 2025",
+      "reviewed_at": "2026-07-22"
+    },
+    {
+      "id": "x-enforcement",
+      "type": "public_policy",
+      "name": "X Enforcement Options",
+      "url": "https://help.x.com/en/rules-and-policies/enforcement-options",
+      "reviewed_at": "2026-07-22"
+    }
+  ],
+  "detectors": [
+    {
+      "id": "builtin-rules",
+      "name": "X Post Risk Reviewer built-in heuristics",
+      "source_type": "project_authored_rules",
+      "version": "2.0.0",
+      "license": "MIT",
+      "external_open_source": false,
+      "default": true,
+      "network_required": false,
+      "languages": ["English", "language-agnostic structural patterns"],
+      "limitations": [
+        "Not an official X rules engine",
+        "Keyword and structural heuristics can miss context and non-English harms",
+        "Does not inspect image pixels, final URL destinations, or account history"
+      ],
+      "rules": [
+        {"id": "builtin.private.identifier", "policy_area": "private_content"},
+        {"id": "builtin.security.credential_terms", "policy_area": "scam_phishing_malware"},
+        {"id": "builtin.violence.targeted_threat_en", "policy_area": "violent_content"},
+        {"id": "builtin.self_harm.encouragement_en", "policy_area": "self_harm"},
+        {"id": "builtin.security.scam_malware_terms_en", "policy_area": "scam_phishing_malware"},
+        {"id": "builtin.scam.crypto_promotion_en", "policy_area": "scam_phishing_malware"},
+        {"id": "builtin.hate.identity_attack_en", "policy_area": "hateful_conduct"},
+        {"id": "builtin.authenticity.multiple_urls", "policy_area": "authenticity_spam"},
+        {"id": "builtin.authenticity.link_only", "policy_area": "authenticity_spam"},
+        {"id": "builtin.authenticity.hashtag_stuffing", "policy_area": "authenticity_spam"},
+        {"id": "builtin.harassment.mass_mentions", "policy_area": "abuse_harassment"},
+        {"id": "builtin.media.unreviewed", "policy_area": "media_not_reviewed"},
+        {"id": "builtin.authenticity.exact_duplicate", "policy_area": "authenticity_spam"},
+        {"id": "builtin.authenticity.near_duplicate", "policy_area": "authenticity_spam"}
+      ]
+    },
+    {
+      "id": "detoxify",
+      "name": "Detoxify",
+      "source_type": "open_source_model",
+      "default_model": "original",
+      "upstream_version_reviewed": "0.5.3",
+      "license": "Apache-2.0",
+      "external_open_source": true,
+      "default": false,
+      "network_required_for_first_install_or_model_download": true,
+      "source_url": "https://github.com/unitaryai/detoxify",
+      "languages": ["primarily English"],
+      "limitations": ["Toxicity model, not an X policy engine", "Requires local dependencies and model weights"]
+    },
+    {
+      "id": "cardiff-offensive",
+      "name": "CardiffNLP Twitter-RoBERTa Offensive",
+      "source_type": "open_source_model",
+      "default_model": "cardiffnlp/twitter-roberta-base-offensive",
+      "license": "review_required",
+      "license_note": "TweetEval repository says it is unrestricted but individual task, dataset, Twitter, and model restrictions may apply; the model card has no explicit license tag.",
+      "external_open_source": true,
+      "default": false,
+      "network_required_for_first_install_or_model_download": true,
+      "source_url": "https://github.com/cardiffnlp/tweeteval",
+      "model_url": "https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive",
+      "languages": ["English"],
+      "limitations": ["Binary offensive-language model, not an X policy engine", "License and dataset terms require review"]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI Moderation",
+      "source_type": "hosted_api",
+      "default_model": "omni-moderation-latest",
+      "license": "proprietary_service",
+      "external_open_source": false,
+      "default": false,
+      "network_required": true,
+      "source_url": "https://developers.openai.com/api/docs/guides/moderation",
+      "limitations": ["Hosted signal service, not open source", "Requires an API key and sends content to a third party"]
+    },
+    {
+      "id": "agent-semantic-review",
+      "name": "Agent semantic and contextual review",
+      "source_type": "agent_reasoning",
+      "license": "runtime_dependent",
+      "external_open_source": false,
+      "default": true,
+      "limitations": ["Not deterministic", "Must disclose unavailable media, links, account history, and posting context"]
+    }
+  ]
+}

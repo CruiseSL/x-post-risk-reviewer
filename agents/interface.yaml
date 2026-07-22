@@ -1,7 +1,7 @@
 interface:
   display_name: "X Post Risk Reviewer"
-  short_description: "Pre-publication risk review for draft X posts with optional local or model signals"
-  default_prompt: "Use $x-post-risk-reviewer to review these draft X posts before publishing. Give per-post risk, policy areas, batch-pattern risk, signal-runner limits, and compliant rewrites where needed."
+  short_description: "Evidence-backed X post publish decisions with detector provenance"
+  default_prompt: "Use $x-post-risk-reviewer to review these draft X posts. Return PASS, REVISE, STOP, or NEEDS_CONTEXT, cite material evidence, and show exactly which policy sources, project rules, open-source models, hosted APIs, and Agent reasoning actually ran. Do not invent rewrites for PASS results."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:
