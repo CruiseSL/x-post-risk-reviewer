@@ -1,8 +1,8 @@
 {
   "name": "x-post-risk-reviewer",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "owner": "CruiseSL",
-  "updated_at": "2026-07-10",
+  "updated_at": "2026-07-22",
   "status": "experimental",
   "maturity_tier": "production",
   "lifecycle_stage": "production",
@@ -24,6 +24,7 @@
     "https://help.x.com/en/rules-and-policies/authenticity",
     "https://developers.openai.com/api/docs/guides/moderation",
     "https://github.com/unitaryai/detoxify",
-    "https://github.com/cardiffnlp/tweeteval"
+    "https://github.com/cardiffnlp/tweeteval",
+    "https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive"
   ]
 }

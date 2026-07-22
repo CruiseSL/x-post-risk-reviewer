@@ -4,7 +4,7 @@ This playbook supports pre-publication review for X posts. It is not legal advic
 
 ## Source Links
 
-Use these as the current source map and recheck them for high-stakes or production use:
+This source map was reviewed on 2026-07-22. Recheck it for each release and for high-stakes use:
 
 - X Rules: https://help.x.com/en/rules-and-policies/x-rules
 - X enforcement options: https://help.x.com/en/rules-and-policies/enforcement-options
@@ -190,13 +190,16 @@ Typical result:
 
 ## Optional Signal Sources
 
-Signals are optional aids, not final decisions. Prefer the local rules provider first for batch files because it needs no API key, network access, or model download. Use external APIs or local open-source models only after the user accepts that provider's privacy, dependency, cost, and license tradeoffs.
+Signals are aids, not final decisions. Run the built-in project-authored rules for supplied text when the script is available because they need no API key, network access, paid service, or model download. Use external APIs or optional open-source models only after the user accepts that provider's privacy, dependency, cost, and license tradeoffs.
 
 Recommended fields to record:
 
 - `signal_provider`: rules, openai, detoxify, cardiff-offensive, or other
 - `signal_model`: model name if applicable
 - `signal_ran`: true or false
+- `source_type`: project-authored rules, open-source model, hosted API, or Agent reasoning
+- `rule_id`: stable built-in or provider-derived finding ID
+- `rule_source` and `rule_version`: provenance for the finding
 - `flagged`: true, false, or unavailable
 - `categories`: provider categories
 - `flags`: provider-derived policy hints, if available
@@ -204,14 +207,21 @@ Recommended fields to record:
 
 Provider notes:
 
-- `rules`: local stdlib-only checks for duplicate/near-duplicate copy, link-only posts, heavy hashtags, high mentions, possible private data, possible credentials, and high-risk threat/scam terms. It does not inspect image pixels, final URL destinations, account history, or nuanced hate/harassment context.
+- `rules`: project-authored, MIT-licensed, stdlib-only heuristics included in this repository. They are not an external open-source rule pack and are not an official X rules engine. They check duplicate/near-duplicate copy, link-only posts, heavy hashtags, high mentions, possible private data, possible credentials, and selected English threat/scam/hate patterns.
 - `openai`: OpenAI moderation signal. OpenAI's moderation docs state that `omni-moderation-latest` accepts text and image inputs and that the moderation endpoint is free to use. Free does not mean anonymous: requests still require an OpenAI API key for authentication, quota, and abuse prevention.
-- `detoxify`: optional open-source toxicity model signal if the package and model are locally installed. It does not know X Rules and may not fit every language/domain.
-- `cardiff-offensive`: optional open-source Twitter-language offensive-content signal through Transformers. The adapter uses cached model files unless the user explicitly allows download.
+- `detoxify`: optional Apache-2.0 open-source toxicity model signal if the package and model are locally installed. It does not know X Rules and is primarily useful for English toxicity signals.
+- `cardiff-offensive`: optional CardiffNLP Twitter-RoBERTa offensive-language signal through Transformers. It is English-focused. TweetEval states that task, dataset, and Twitter restrictions may apply, and the model card has no explicit license tag, so mark its license as `review_required`.
 
 A platform-specific X review must add policy and context analysis because provider categories do not equal X Rules.
 
 ### Local Runner Commands
+
+For a single pasted post, use `--text` or `--stdin`:
+
+```bash
+python3 scripts/moderate_posts.py --text "Draft post" --output moderation-signals.json
+printf '%s' "$POST_TEXT" | python3 scripts/moderate_posts.py --stdin --output moderation-signals.json
+```
 
 For local JSON, JSONL, or CSV batches, use:
 
@@ -222,6 +232,7 @@ python3 scripts/moderate_posts.py --input posts.json --output moderation-signals
 Default behavior:
 
 - `--provider rules` is the default and does not require an API key.
+- `--output -` writes JSON to standard output and is the default.
 - Default text field is `text`; default ID field is `id`.
 - Optional image field is `image_url`; JSON may use a list, CSV may use semicolon-separated URLs.
 - Output is a signal file. Feed it into the normal X policy review instead of treating it as a final publish/block decision.

@@ -1,6 +1,6 @@
 # X Post Risk Reviewer
 
-Review draft X posts for likely policy, visibility, and account-risk issues before publishing. The Skill supports single posts, batches, compliant rewrites, and posting-plan audits.
+Review draft X posts as a decision gate before publishing. The Skill returns `PASS`, `REVISE`, `STOP`, or `NEEDS_CONTEXT` and shows the evidence, policy mapping, detector source, confidence, and actual execution trace behind the result.
 
 ## Install
 
@@ -53,7 +53,9 @@ post_002: ...
 post_003: ...
 ```
 
-This skill helps reduce visible policy and enforcement risk. It does not guarantee reach, ranking, publication, or account safety, and it must not be used to disguise violating content.
+For an ordinary low-risk text post, the expected result is deliberately short: `PASS`, publish as written, no manufactured rewrite, and a trace showing what actually ran. Detailed findings appear only when there is a material issue.
+
+This Skill helps reduce visible policy and enforcement risk. It does not guarantee reach, ranking, publication, or account safety, and it must not be used to disguise violating content.
 
 ## What It Reviews
 
@@ -65,7 +67,15 @@ This skill helps reduce visible policy and enforcement risk. It does not guarant
 
 ## Optional Signal Runner
 
-For local batch files, you can generate a signal file first. The default provider is local rules, so it needs no API key, network access, paid API, or model download:
+The default `rules` provider contains project-authored MIT-licensed heuristics. It is not an external open-source rule pack and it is not an official X rules engine. It needs no API key, network access, paid API, or model download.
+
+For one post:
+
+```bash
+python3 scripts/moderate_posts.py --text "Draft post" --output moderation-signals.json
+```
+
+For local batch files:
 
 ```bash
 python3 scripts/moderate_posts.py --input posts.json --output moderation-signals.json
@@ -77,7 +87,7 @@ Equivalent explicit form:
 python3 scripts/moderate_posts.py --provider rules --input posts.json --output moderation-signals.json
 ```
 
-The local `rules` provider checks obvious text and batch-pattern signals such as duplicate copy, near-duplicates, link-only posts, heavy hashtags, mass mentions, possible private data, possible credentials, and high-risk threat/scam terms. It is not a full content-safety model and it does not inspect image pixels or final URL destinations.
+The built-in provider evaluates 14 named rules covering duplicate copy, near-duplicates, link-only posts, heavy hashtags, mass mentions, possible private data, possible credentials, and selected English threat/scam/hate patterns. Every finding includes a stable `rule_id`, evidence, source type, version, and confidence. It does not inspect image pixels, final URL destinations, account history, or nuanced multilingual context.
 
 Supported input formats: `.json`, `.jsonl`, `.csv`.
 
@@ -87,7 +97,9 @@ Default fields:
 - `text`
 - optional `image_url`
 
-Then paste or attach `moderation-signals.json` to the agent with the original drafts and ask it to continue with `$x-post-risk-reviewer`. The script output is only a signal; the Skill still does the X-specific policy and context review.
+The JSON output includes `policy_sources`, `detector_execution`, per-post `detector_trace`, and explicit lists of open-source, project-authored, and hosted components that actually ran. Paste or attach it to the Agent with the original drafts and ask it to continue with `$x-post-risk-reviewer`.
+
+The full detector, source, version, license, language, and limitation registry is in [`references/detector-registry.json`](references/detector-registry.json).
 
 Dry-run parsing check:
 
@@ -118,7 +130,7 @@ python3 scripts/moderate_posts.py --provider detoxify --input posts.json --outpu
 python3 scripts/moderate_posts.py --provider cardiff-offensive --input posts.json --output moderation-signals.json
 ```
 
-These providers do not require an OpenAI key, but they may require Python packages, local model files, CPU/GPU time, and their own license/privacy review. The CardiffNLP adapter uses cached model files by default; pass `--allow-model-download` only if downloading model weights is acceptable.
+Detoxify is Apache-2.0 and primarily provides English toxicity signals. CardiffNLP is English-focused; TweetEval says task, dataset, and Twitter restrictions may apply, while the model card has no explicit license tag, so this project records it as `review_required`. Neither provider is an X policy engine. They may require Python packages, local model files, CPU/GPU time, and privacy/license review. The CardiffNLP adapter uses cached model files by default; pass `--allow-model-download` only if downloading model weights is acceptable.
 
 Custom CSV fields:
 
